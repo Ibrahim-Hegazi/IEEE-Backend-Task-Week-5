@@ -1,0 +1,85 @@
+Use Company_SD
+
+--Display Department Information and Manager:
+SELECT D.Dnum, D.Dname, E.SSN, E.Fname, E.Lname
+FROM  Departments D
+JOIN Employee E ON D.MGRSSN = E.SSN;
+
+--Display Department Names and Associated Projects:
+SELECT D.Dname, P.Pname
+FROM Departments D
+JOIN Project P ON D.Dnum = P.Dnum;
+
+--Retrieve Dependents Associated with Employees:
+SELECT E.Fname + ' ' +E.Lname As 'Employee Name', D.Dependent_name
+FROM Employee E
+JOIN Dependent D ON E.SSN = D.ESSN;
+
+--Projects in Cairo or Alexandria:
+SELECT P.Pnumber, P.Pname, P.City
+FROM Project P
+WHERE P.City IN ('Cairo', 'Alex');
+
+--Projects Starting with “A”:
+SELECT *
+FROM Project
+WHERE Pname LIKE 'A%';
+
+--Employees in Department 30 with Salary Range from 1000 to 2000 LE monthly:
+SELECT *
+FROM Employee
+WHERE Dno = 30 AND Salary BETWEEN 1000 AND 2000;
+
+--Retrieve the names of all employees in department 10 who works more than or equal10 hours per week on "AL Rabwah" project.:
+SELECT E.Fname, E.Lname
+FROM Employee E
+JOIN Works_for W ON E.SSN = W.ESSN
+WHERE W.Pno = (SELECT Pnumber FROM Project WHERE Pname = 'AL Rabwah')
+  AND W.Hours >= 10 AND E.Dno = 10;
+
+--Find the names of the employees who directly supervised with Kamel Mohamed
+SELECT E.Fname, E.Lname
+FROM Employee E
+WHERE E.Superssn = (SELECT SSN FROM Employee WHERE Fname = 'Kamel' AND Lname = 'Mohamed');
+
+--Retrieve the names of all employees and the names of the projects they are working on, sorted by the project name
+SELECT E.Fname, E.Lname, P.Pname
+FROM Employee E
+JOIN Works_for W ON E.SSN = W.ESSN
+JOIN Project P ON W.Pno = P.Pnumber
+ORDER BY P.Pname;
+
+--For each project located in Cairo City , find the project number, the controlling department name ,the department manager last name ,address and birthdate:
+SELECT
+    P.Pnumber AS "Project Number",
+    D.Dname AS "Controlling Department",
+    E.Lname AS "Department Manager Last Name",		--ERRORRRRRRRRRRRRRRRRRRR
+    E.Address,
+    E.Bdate AS "Manager Birthdate"
+FROM Project P
+JOIN Departments D ON P.Dnum = D.Dnum
+JOIN Employee E ON D.MGRSSN = E.SSN
+WHERE P.Plocation = 'Cairo';
+
+--Display All Manager Data
+SELECT *
+FROM Employee
+WHERE SSN IN (SELECT MGRSSN FROM Departments);
+
+--Display All Employees data and the data of their dependents even if they have no dependents:
+SELECT E.*, D.Dependent_name
+FROM Employee E
+LEFT JOIN Dependent D ON E.SSN = D.ESSN ;
+
+--Insert your personal data to the employee table as a new employee in department number 30, SSN = 102672, Superssn = 112233, salary=3000
+INSERT INTO Employee (SSN, Fname, Lname, Dno, Salary, Superssn)
+VALUES (102672, 'YourFirstName', 'YourLastName', 30, 3000, 112233);
+
+--Insert another employee with personal data your friend as new employee in department number 30, SSN = 102660, but don’t enter any value for salary or manager number to him
+INSERT INTO Employee (SSN, Fname, Lname, Dno)
+VALUES (102660, 'FriendFirstName', 'FriendLastName', 30);
+
+--Upgrade your salary by 20 % of its last value
+UPDATE Employee
+SET Salary = Salary * 1.2;
+

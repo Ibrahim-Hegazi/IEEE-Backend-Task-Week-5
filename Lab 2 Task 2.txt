@@ -1,0 +1,35 @@
+USE [YourDatabaseName]
+ALTER AUTHORIZATION ON DATABASE::[YourDatabaseName] TO [sa]
+
+--Display all the employees’ data:
+SELECT * FROM Employee;
+
+--Display the employee first name, last name, salary, and department number:
+SELECT Fname, Lname, Salary, Dno FROM Employee;
+
+--Display all project names, locations, and the department responsible for each project:
+SELECT Pname, Plocation, Dnum FROM Project;
+
+--Calculate and display each employee’s annual commission (10% of their annual salary):
+SELECT Fname + ' ' + Lname AS "Full Name", Salary * 0.1 * 12 AS "ANNUAL COMMISSION" FROM Employee;
+
+--Display employees’ IDs and names who earn more than 1000 LE monthly:
+SELECT SSN, Fname + ' ' + Lname AS "Full Name" FROM Employee WHERE Salary > 1000;
+
+--Display employees’ IDs and names who earn more than 10000 LE annually:
+SELECT SSN, Fname + ' ' + Lname AS "Full Name" FROM Employee WHERE Salary * 12 > 10000;
+
+--Display the names and salaries of female employees:
+SELECT Fname, Lname, Salary FROM Employee WHERE Sex = 'F';
+
+--Display each department ID and name managed by a manager with ID 968574:
+SELECT Dnum, DName FROM Departments WHERE MGRSSN = 968574;
+
+--Display the IDs, names, and locations of projects controlled by department 10:
+SELECT Pnumber, Pname, Plocation FROM Project WHERE Dnum = 10;
+
+
+
+
+
+
